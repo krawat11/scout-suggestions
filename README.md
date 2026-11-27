@@ -4,6 +4,12 @@ A mobile-first clickable prototype of a search assistant inside Property Finder.
 
 Built on a hand audit of Princess Tower, Dubai Marina (210 live listings, 27 Nov 2026).
 
+## How to run
+
+No build step. Open `site/index.html` in a browser, or run `python3 -m http.server` inside `site/` and open http://localhost:8000 at phone width.
+
+To re-run the scoring test: `python3 rules/flags.py && python3 rules/score.py` (42 of 47 listings match the audit verdicts).
+
 ## Demo path
 
 1. "I'm renting", open the 3BR (114610923). Tap "Ask: is it available now…", then Send. The simulated reply clears two flags and the score goes from 60 to 85, Short list.
