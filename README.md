@@ -6,6 +6,8 @@ Built on a hand audit of Princess Tower, Dubai Marina (210 live listings, 27 Nov
 
 ## How to run
 
+Live demo (open on a phone): https://krawat11.github.io/scout-suggestions/
+
 No build step. Open `site/index.html` in a browser, or run `python3 -m http.server` inside `site/` and open http://localhost:8000 at phone width.
 
 To re-run the scoring test: `python3 rules/flags.py && python3 rules/score.py` (42 of 47 listings match the audit verdicts).
