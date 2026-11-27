@@ -1,0 +1,516 @@
+<title>Scout's Suggestions</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&display=swap">
+<style>
+/* Layout: Property Finder listing page as-is (gallery, price, chips, agent / agency / Mortgage Finder sidebar).
+   Only the "Property details" block is replaced by Scout's Suggestions. Single light look, like PF. */
+:root{
+  --bg:#ffffff; --fg:#2d2a3e; --muted:#6f6c80; --line:#ebe9f0; --soft:#f6f5f9; --chip:#f3f2f8;
+  --brand:#ea3934; --navy:#28246a; --scout:#5a4ae3; --scout-2:#8b5cf6; --scout-soft:#f3f1ff;
+  --good:#1e9e5a; --good-soft:#e5f6ec; --warn:#d98a00; --warn-soft:#fff4dd; --bad:#e0413b; --bad-soft:#fdecea;
+  --font:"Lato",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--font);font-size:16px;line-height:1.45}
+a{color:inherit}
+button{font:inherit}
+.muted{color:var(--muted)} .small{font-size:13px} .note{font-size:12px;color:var(--muted)}
+/* header */
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:6;background:var(--bg);border-bottom:1px solid var(--line)}
+.nav-in{display:flex;align-items:center;gap:28px;height:64px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));max-width:1440px;margin:0 auto}
+.pf{display:flex;align-items:center;gap:6px;text-decoration:none;cursor:pointer;border:0;background:none;padding:0}
+.pf svg{width:26px;height:30px}
+.pf span{color:var(--brand);font-weight:700;line-height:.95;font-size:15px;text-align:left}
+.nav a{text-decoration:none;color:var(--fg);font-size:16px}
+.nav .l{display:flex;gap:30px}.nav .r{display:flex;gap:30px;margin-left:auto;align-items:center}
+.login{background:var(--brand);color:#fff!important;border-radius:99px;padding:10px 22px;font-weight:700}
+.burger{font-size:22px}
+@media (max-width:1000px){.nav .l,.nav .r a:not(.login):not(.burger){display:none}}
+.page{max-width:1240px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:18px 80px}
+.crumbs{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--muted);flex-wrap:wrap}
+.crumbs .h{color:var(--navy)}
+.backbtn{border:1px solid var(--navy);background:var(--bg);color:var(--navy);border-radius:99px;padding:5px 14px;font-weight:700;font-size:14px;cursor:pointer;margin-right:6px} .crumbs b{font-weight:400;color:var(--fg)}
+.crumbs .acts2{margin-left:auto;display:flex;gap:24px;color:var(--navy);font-weight:700;font-size:15px}
+.crumbs .acts2 span{display:flex;gap:6px;align-items:center}
+@media (max-width:700px){.crumbs .acts2{display:none}.crumbs .mid{display:none}}
+/* gallery */
+.gallery{display:grid;grid-template-columns:1.62fr 1fr;gap:12px;margin-top:22px;aspect-ratio:1670/652;max-width:100%}
+.gallery img{width:100%;height:100%;object-fit:cover;display:block;border-radius:14px;background:var(--soft)}
+.gallery{grid-template-rows:minmax(0,1fr)}
+.gallery .main{position:relative;min-height:0;height:100%}
+.gallery .side{display:grid;grid-template-rows:minmax(0,1fr) minmax(0,1fr);gap:12px;min-height:0;height:100%}
+.gallery .side img{min-height:0}
+.gallery .count{position:absolute;right:14px;bottom:14px;background:rgba(30,28,40,.72);color:#fff;font-size:14px;border-radius:8px;padding:3px 10px;display:flex;gap:6px;align-items:center}
+@media (max-width:700px){.gallery{grid-template-columns:1fr;aspect-ratio:668/452}.gallery .side{display:none}}
+/* columns */
+.cols{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:24px;margin-top:14px;align-items:start}
+@media (max-width:900px){.cols{grid-template-columns:minmax(0,1fr)}}
+.price{font-size:clamp(28px,4vw,38px);font-weight:900;margin:6px 0 10px;display:flex;align-items:center;gap:8px;font-variant-numeric:tabular-nums}
+.dh{width:.85em;height:.85em}
+.chips{display:flex;gap:10px;flex-wrap:wrap;padding-bottom:22px;border-bottom:3px solid var(--line)}
+.chips span{display:flex;gap:8px;align-items:center;background:var(--chip);color:var(--navy);border-radius:8px;padding:9px 14px;font-size:15px;font-weight:700}
+.chips svg{width:18px;height:18px;flex:none}
+@media (max-width:700px){.chips{flex-wrap:nowrap;overflow-x:auto}.chips span{white-space:nowrap}}
+.below{border-top:3px solid var(--line);margin-top:28px;padding-top:24px}
+.below .sub{font-size:14px;color:var(--muted);font-weight:700}
+.below h2{font-size:26px;margin:6px 0 10px;font-weight:700;text-wrap:balance}
+.avail{display:flex;gap:8px;align-items:center;font-weight:700;margin-bottom:14px}
+.desc{white-space:pre-line;color:#5b5868}
+/* sidebar */
+.side-wrap{background:var(--soft);border-radius:24px;padding:20px;display:grid;gap:22px;position:sticky;top:84px}
+@media (max-width:900px){.side-wrap{position:static}}
+.box{background:var(--bg);border-radius:16px;box-shadow:0 1px 4px rgba(30,20,80,.10);padding:18px}
+.agent{display:grid;grid-template-columns:124px 1fr;gap:18px;align-items:center}
+.agent img{width:124px;height:124px;border-radius:50%;object-fit:cover;background:var(--soft)}
+.agent h3{margin:0 0 4px;font-size:22px;font-weight:700}
+.agent .meta{display:grid;gap:6px;font-size:15px}
+.stars{display:flex;gap:4px;align-items:center;font-weight:700}
+.stars u{font-weight:700}
+.ctas{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+.ctas span{display:flex;justify-content:center;align-items:center;gap:8px;border:1px solid var(--navy);color:var(--navy);border-radius:8px;padding:12px;font-weight:700;font-size:18px}
+.ctas .wa{background:var(--brand);border-color:var(--brand);color:#fff}
+.broker{display:flex;gap:22px;align-items:center}
+.broker img{width:160px;height:120px;object-fit:contain;border-radius:8px;background:#f6ece9;flex:none}
+.broker b{font-size:22px;font-weight:700}
+.mf{padding:0;overflow:hidden}
+.mf .t{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--line);gap:10px;flex-wrap:wrap}
+.mf .lg{display:flex;align-items:center;gap:6px;color:var(--brand);font-weight:700;line-height:.95;font-size:17px}
+.mf .b{padding:18px 20px;display:grid;gap:12px}
+.mf h4{margin:0;font-size:19px}
+.mf ul{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+.mf li{display:flex;gap:12px;align-items:center}
+.mf li::before{content:"✓";color:var(--brand);font-weight:900}
+.mf .btn{border:1px solid var(--navy);color:var(--navy);text-align:center;border-radius:10px;padding:12px;font-weight:700;font-size:18px}
+@media (max-width:420px){.agent{grid-template-columns:84px 1fr}.agent img{width:84px;height:84px}.broker img{width:100px;height:76px}}
+
+/* ===== Scout's Suggestions (replaces Property details) ===== */
+.scout{margin-top:26px;display:grid;gap:12px}
+.scout-h{display:flex;align-items:center;gap:12px}
+.av{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--scout),var(--scout-2));color:#fff;display:grid;place-items:center;flex:none;box-shadow:0 4px 12px rgba(90,74,227,.30)}
+.av svg{width:20px;height:20px}
+.scout-h b{display:block;font-size:20px}
+.bubble{background:var(--scout-soft);border-radius:6px 20px 20px 20px;padding:16px 18px;display:grid;gap:12px;max-width:100%}
+.facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px 16px}
+.facts div{font-weight:700}
+.facts div b{display:block;font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.07em;margin-bottom:2px}
+.trust{display:flex;gap:22px;align-items:center}
+.trust .txt{flex:1;min-width:0;display:grid;gap:10px;text-align:left}
+.trust .gauge{flex:none;width:250px}
+@media (max-width:560px){.trust{flex-direction:column-reverse;align-items:stretch}.trust .gauge{width:100%;max-width:260px;margin:0 auto}}
+.pill{display:inline-flex;align-items:center;gap:6px;border-radius:99px;padding:4px 12px;font-size:13px;font-weight:900;width:fit-content;letter-spacing:.02em}
+.pill.bad{background:var(--bad-soft);color:var(--bad)} .pill.warn{background:var(--warn-soft);color:#a86400} .pill.good{background:var(--good-soft);color:var(--good)}
+.verdict{font-size:17px;font-weight:700;line-height:1.35}
+.flags{margin:0;padding:0;list-style:none;display:grid;gap:6px}
+.flags li{display:flex;gap:8px;align-items:flex-start}
+.flags li::before{content:"";flex:none;width:7px;height:7px;border-radius:50%;margin-top:8px;background:var(--bad)}
+.flags li.done{text-decoration:line-through;opacity:.55}
+.flags li.done::before{background:var(--good)}
+.okline{font-size:14px;color:#2a6d47}
+.howlink{background:none;border:0;color:var(--scout);font-weight:900;padding:0;cursor:pointer;text-align:left;width:fit-content}
+table.ded{width:100%;border-collapse:collapse;font-size:14px}
+table.ded td{padding:6px 0;border-bottom:1px solid #e2dff3;vertical-align:top} table.ded td:last-child{text-align:right;font-variant-numeric:tabular-nums;font-weight:900;padding-left:10px;white-space:nowrap}
+.gauge svg{width:100%;height:auto;display:block;overflow:hidden}
+.trust .gauge{align-self:center}
+.gauge .needle{transition:transform 1.4s cubic-bezier(.2,.9,.25,1.15);transform-box:view-box;transform-origin:120px 118px}
+.gauge .g-num{font-size:34px;font-weight:900;fill:var(--fg);font-family:var(--font)}
+.gauge .g-lbl{font-size:11px;font-weight:700;fill:var(--muted);letter-spacing:.12em;font-family:var(--font)}
+.gauge .tick-l{font-size:10px;fill:#9895aa;font-family:var(--font);font-weight:700}
+.acts{display:flex;flex-wrap:wrap;gap:8px}
+.act{border:1.5px solid var(--scout);background:var(--bg);color:var(--scout);border-radius:99px;padding:8px 14px;font-size:14.5px;font-weight:700;cursor:pointer;text-align:left;transition:background .15s}
+.act:hover{background:#ece9ff}
+.act.primary{background:linear-gradient(135deg,var(--scout),var(--scout-2));color:#fff;border-color:transparent}
+.act:focus-visible,.card:focus-visible,button:focus-visible{outline:3px solid var(--scout);outline-offset:2px}
+/* home */
+.intro{background:var(--scout-soft);border-radius:16px;padding:16px 18px;margin-top:8px;max-width:760px}
+.seg{display:flex;gap:8px;margin:20px 0 8px;max-width:420px}
+.seg button{flex:1;border:1px solid var(--line);background:var(--bg);color:var(--fg);border-radius:99px;padding:10px;cursor:pointer;font-weight:700}
+.seg button[aria-pressed="true"]{background:var(--navy);color:#fff;border-color:var(--navy)}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-top:12px}
+.card{display:block;border:1px solid var(--line);border-radius:16px;overflow:hidden;cursor:pointer;background:var(--bg);color:inherit;text-align:left;width:100%;padding:0}
+.card img{width:100%;aspect-ratio:668/452;object-fit:cover;display:block;background:var(--soft)}
+.card .body{padding:12px 14px 14px;display:grid;gap:4px}
+.card .cp{font-weight:900;font-size:20px}
+/* chat sheet */
+.sheet-bg{position:fixed;inset:0;background:rgba(10,8,30,.45);z-index:20}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:21;background:var(--bg);border-radius:20px 20px 0 0;max-height:88vh;display:flex;flex-direction:column;max-width:600px;margin:0 auto;padding-bottom:env(safe-area-inset-bottom,0px);box-shadow:0 -8px 30px rgba(20,10,60,.2)}
+.sheet-h{display:flex;align-items:center;gap:10px;padding:12px 16px 10px;border-bottom:1px solid var(--line)}
+.sheet-h>button{margin-left:auto;border:0;background:var(--soft);color:var(--fg);border-radius:99px;width:32px;height:32px;cursor:pointer}
+.log{overflow-y:auto;padding:12px 16px;display:grid;gap:10px;align-content:start;flex:1}
+.msg{max-width:88%;padding:10px 12px;border-radius:14px;font-size:15px;display:grid;gap:6px}
+.msg.s{background:var(--scout-soft);border-top-left-radius:4px}
+.msg.u{background:var(--navy);color:#fff;justify-self:end;border-top-right-radius:4px}
+.msg.a{background:var(--soft);border:1px dashed var(--muted);border-top-left-radius:4px}
+.msg .who{font-size:11px;font-weight:900;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.msg.u .who{color:inherit;opacity:.75}
+.draft{border:1px solid var(--scout);border-radius:12px;padding:10px;display:grid;gap:8px;background:var(--bg)}
+.draft textarea{width:100%;min-height:90px;border:1px solid var(--line);border-radius:8px;padding:8px;font:inherit;font-size:14.5px;background:var(--bg);color:var(--fg);resize:vertical}
+.draft .row{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.send{background:var(--scout);color:#fff;border:0;border-radius:10px;padding:9px 16px;font-weight:700;cursor:pointer}
+.send:disabled{opacity:.5}
+.ghost{background:none;border:1px solid var(--line);color:var(--fg);border-radius:10px;padding:8px 12px;cursor:pointer}
+.compose{display:flex;gap:6px;padding:10px 16px 12px;border-top:1px solid var(--line)}
+.compose input{flex:1;min-width:0;border:1px solid var(--line);border-radius:99px;padding:10px 14px;font:inherit;background:var(--bg);color:var(--fg)}
+.cmp{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.cmp img{width:100%;aspect-ratio:668/452;object-fit:cover;border-radius:8px;background:var(--soft)}
+.tx{width:100%;border-collapse:collapse;font-size:14px;font-variant-numeric:tabular-nums}
+.tx td{padding:3px 0;border-bottom:1px solid var(--line)} .tx td:last-child{text-align:right}
+.slots{display:flex;flex-wrap:wrap;gap:6px}
+.slots button{border:1px solid var(--scout);background:var(--bg);color:var(--scout);border-radius:8px;padding:6px 10px;cursor:pointer;font-weight:700}
+.slots button[aria-pressed="true"]{background:var(--scout);color:#fff}
+@media (prefers-reduced-motion:no-preference){.msg{animation:in .25s ease-out}@keyframes in{from{transform:translateY(6px);opacity:.4}}}
+@media (prefers-reduced-motion:reduce){.gauge .needle{transition:none}}
+</style>
+
+<nav class="nav"><div class="nav-in">
+  <button class="pf" id="homeBtn" aria-label="Property Finder home">
+    <svg viewBox="0 0 26 30" aria-hidden="true"><path d="M13 0C5.8 0 0 5.6 0 12.6c0 3.4 1.4 6.5 3.6 8.8V30l8.1-5.1c.4 0 .9.1 1.3.1 7.2 0 13-5.6 13-12.5S20.2 0 13 0z" fill="#ea3934"/><path d="M3.6 21.4V30l8.1-5.1C8.6 24.6 5.7 23.4 3.6 21.4z" fill="#b8231f"/></svg>
+    <span>Property<br>Finder</span>
+  </button>
+  <div class="l"><a>Buy</a><a>Rent</a><a>New projects</a></div>
+  <div class="r"><a>Sell your property</a><a>Get a mortgage</a><a>Find agents</a><a>Transactions</a><a class="burger">☰</a><a class="login">Log in</a></div>
+</div></nav>
+<main class="page" id="app"></main>
+<div id="sheetRoot"></div>
+
+<script>
+const L = {
+ "163244904":{
+  mode:"rent", title:"High floor | Marina & sea views | Dubai Marina", priceTxt:"AED 111,499", per:"yearly",
+  sub:"Apartment for rent in Princess Tower, Dubai Marina", photos:26,
+  facts:[["Beds","1"],["Baths","1"],["Size","922 sqft"],["Furnished","Yes"],["Cheques","4"],["Available","13 Oct 2026"]],
+  listed:"Listed 23 Oct 2026",
+  agent:{name:"Karina Neustroeva",first:"Karina",co:"Colife Vacation Homes LLC",badge:"Not verified · no DLD ad permit"},
+  desc:"Exclusive first-month discount when you book a long-term stay online!\n\n922 sq ft, 17 floor\nHigh floor | Marina & sea views | Prime Dubai Marina location\n\nAll included!\n• DEWA, chiller, Wi-Fi\n• Maintenance\n• Tenant support\n*bills included if rented for less then a year\n\nApartment is fully-furnished!",
+  flags:[
+   {k:"c",t:"Holiday-home operator listed as a yearly rental",d:30,why:"Colife holds a holiday-home (DTCM) licence, and the small print says bills are only included for stays under a year."},
+   {k:"b",t:"31% above the building median",d:30,why:"AED 121 per sqft. Yearly 1BRs here median AED 93."},
+   {k:"e",t:"No DLD ad permit or Verified badge",d:20,why:"Yearly rentals in Dubai need a DLD (Trakheesi) permit. This one shows only a DTCM licence."},
+   {k:"g",t:"Same text and price as 4 other Colife units",d:15,why:"AED 111,499 for an 862 sqft and a 922 sqft unit alike."},
+   {k:"h",t:"Price ends in 499",d:5,why:"A pricing habit, weak on its own."}],
+  verdict:"I wouldn't treat this as a normal yearly rental. It's a holiday let priced like one.",
+  tx:{label:"Registered rents for 922–923 sqft in this tower",rows:[["19 Nov 2026","AED 73,000"],["3 Nov 2026","AED 85,000"],["24 Jul 2026","AED 108,000"],["29 Jul 2025","AED 110,000"],["11 Sep 2024","AED 90,000"]]},
+  asks:[
+   {id:"q1",label:"Ask: is this a 12-month Ejari tenancy?",flag:"c",
+    draft:"Hi Karina, is the AED 111,499 a 12-month tenancy registered with Ejari? If bills are only included for stays under a year, what is the yearly price without them, and can it be paid in 4 cheques?",
+    reply:"Hi! This is our long-stay package. DEWA, chiller and Wi-Fi are included. We can do 12 months, but it runs under our holiday-home licence, so there's no Ejari.",
+    outcome:"confirm",
+    scout:"Karina confirmed it: no Ejari, so this is a holiday let, not a standard yearly tenancy. Without Ejari you can't register the lease, and it's harder to get a residence visa or DEWA in your name. The score stays at 0, and I've added her reply to the warning."},
+   {id:"q2",label:"Show what this size actually rents for",local:"tx"},
+   {id:"q3",label:"Ask for a viewing",viewing:true}]
+ },
+ "165059354":{
+  mode:"sale", title:"Vacant I High Floor | Sea Facing", priceTxt:"AED 2,000,000", per:"",
+  sub:"Apartment for sale in Princess Tower, Dubai Marina", photos:10,
+  facts:[["Beds","2"],["Baths","2"],["Size","1,305 sqft"],["Furnished","No"],["Status","Ready, vacant"],["Per sqft","AED 1,533"]],
+  listed:"Listed 27 Oct 2026",
+  agent:{name:"Mohammad Sharif Sharifi",first:"Mohammad",co:"PropertyShoma Real Estate",badge:"SuperAgent · Verified · DLD permit"},
+  desc:"Propertyshoma offers this 2-bedroom apartment in Princess Tower, Dubai Marina.\n\n- 2 bedrooms\n- 2 bathrooms\n- Size: 1,305 sq. ft.\n- Mid floor\n- Marina views\n- 1 parking space\n\nPositioned on a high floor, the apartment offers Marina views… The unit is fully furnished and ready for immediate occupancy.",
+  flags:[
+   {k:"a",t:"Photos are the same files as a different unit",d:40,why:"Listing 175131725 (same agency) uses identical photo files, but it's a 1,182 sqft 2BR + study with 3 baths. This one is 1,305 sqft with 2 baths."},
+   {k:"f",t:"The listing contradicts itself",d:20,why:"Title says high floor and sea facing. The text says mid floor and Marina views, then high floor again. It's listed unfurnished, but the text says fully furnished."}],
+  good:"The price itself looks fair: this size registered at AED 2.0M on 5 Nov 2026.",
+  verdict:"The price checks out. The photos and the floor don't, so you can't yet tell what you'd be buying.",
+  twin:"175131725",
+  tx:{label:"Registered sales for 1,305 sqft in this tower",rows:[["5 Nov 2026","AED 2,000,000"],["16 Dec 2025","AED 2,000,000"],["14 Mar 2025","AED 1,965,000"],["6 Aug 2024","AED 2,056,036"],["10 Jul 2024","AED 2,056,000"]]},
+  asks:[
+   {id:"q1",label:"Ask: which floor, and photos of this exact unit?",flag:"f",
+    draft:"Hi Mohammad, the title says high floor but the description says mid floor, and the photos match another PropertyShoma listing (a 1,182 sqft 2BR + study). Which floor is this unit on, is it furnished, and can you send photos of this exact unit? Also, do you hold the Form A for it?",
+    reply:"Thanks for flagging. It's on the 38th floor, Marina view, unfurnished. The photos were from a similar unit in the same stack, sorry. Form A is with us. I'll send real photos tomorrow.",
+    outcome:"clear",
+    scout:"That clears up the floor and furnishing, so I've given back those 20 points. The photo flag stays until his real photos arrive, because the ones on the listing still show another apartment. New score: 60, Not sure."},
+   {id:"q2",label:"Compare the photos with the other listing",local:"twin"},
+   {id:"q3",label:"Show registered sale prices",local:"tx"},
+   {id:"q4",label:"Ask for a viewing",viewing:true}]
+ },
+ "114610923":{
+  mode:"rent", title:"Available! Full Sea VIew! 3br+MAids Room!", priceTxt:"AED 169,899", per:"yearly",
+  sub:"Apartment for rent in Princess Tower, Dubai Marina", photos:30,
+  facts:[["Beds","3 + maid"],["Baths","4"],["Size","2,403 sqft"],["Furnished","No"],["Available","29 May 2026"],["On market","139 days"]],
+  listed:"Listed 11 Jul 2026",
+  agent:{name:"Illia Bilyk",first:"Illia",co:"Sumy Real Estate",badge:"Verified · DLD permit"},
+  desc:"AVAILABLE! Full Sea VIew! 3br+MAids Room! Best Layout\n\nThe Princess Tower is a 101 story, 413.4 m tall residential-only skyscraper located in the Marina district of Dubai, UAE…\n\nViewing possible 24/7",
+  flags:[
+   {k:"f",t:"Size matches no other 3BR listing here",d:20,why:"Every other 3BR in the tower is 1,998–2,100 sqft. But 5 rentals of exactly 2,403 sqft were registered this year, so the layout probably exists."},
+   {k:"i",t:"On the market 139 days",d:5,why:"Over 90 days for a rental."},
+   {k:"j",t:"Availability date is 6 months old",d:5,why:"The page still says 29 May 2026."},
+   {k:"k",t:"26% below the building median per sqft",d:5,why:"Could be a real deal. Against registered rents for this size it's only 9% below."},
+   {k:"h",t:"Price ends in 899",d:5,why:"A pricing habit, weak on its own."}],
+  good:"It has a DLD permit, and the price is close to what this size registered for (median AED 187k).",
+  verdict:"Probably real, but stale. Worth one message before you spend a Saturday on it.",
+  tx:{label:"Registered rents for 2,403 sqft in this tower",rows:[["8 Nov 2026","AED 250,000"],["29 Oct 2026","AED 395,000"],["7 Oct 2026","AED 187,000"],["19 Aug 2026","AED 170,000"],["20 Apr 2026","AED 185,000"]]},
+  asks:[
+   {id:"q1",label:"Ask: is it available now, and what's the real size?",flag:"fj",
+    draft:"Hi Illia, the page says available from 29 May 2026. Is the unit still vacant, and from what date? The 2,403 sqft size is larger than other 3BRs in the tower. Is that the title-deed size, and does it include the maid's room and balcony?",
+    reply:"Yes, still vacant, you can move in now. 2,403 sqft is the title deed size, it's the bigger C-type layout with maid's room and a wraparound balcony. Viewing anytime.",
+    outcome:"clear",
+    scout:"Good news. Illia confirmed it's vacant now and that 2,403 sqft is the title-deed size, which matches the registered rents. I've given back 25 points (size and stale date). New score: 85, Short list. Want me to ask for a viewing?"},
+   {id:"q2",label:"Show what this size actually rents for",local:"tx"},
+   {id:"q3",label:"Ask for a viewing",viewing:true}]
+ }
+};
+const EXTRA={
+ "163244904":{langs:"English, Russian",rating:"3.7",ratings:"3 Ratings",resp:"Usually responds within 5 minutes",chips:["upfront","rvb","map","plan"],avail:"13 Oct 2026"},
+ "165059354":{langs:"English, Persian/Farsi",superAgent:true,chips:["upfront","map"]},
+ "114610923":{langs:"English, Russian, Ukrainian",chips:["upfront","rvb","map"],avail:"29 May 2026"}
+};
+const ORDER={rent:["114610923","163244904"],sale:["165059354"]};
+const state={mode:"rent",scores:{},shown:{},answered:{}};
+for(const id in L){state.scores[id]=100-L[id].flags.reduce((a,f)=>a+f.d,0)}
+const band=s=>s>=85?["good","Short list"]:s>50?["warn","Not sure"]:["bad","Likely misleading"];
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const app=document.getElementById("app");
+document.getElementById("homeBtn").onclick=()=>{location.hash="home"};
+function img(src,alt){return `<img src="${src}" alt="${esc(alt)}" loading="lazy" onerror="this.style.visibility='hidden'">`}
+const DH=`<svg class="dh" viewBox="0 0 40 40" aria-label="AED"><path d="M8 4h11c10 0 16 6.5 16 16s-6 16-16 16H8V4zm6 5.5v21h5c6.3 0 9.6-4 9.6-10.5S25.3 9.5 19 9.5h-5z" fill="currentColor"/><rect x="2" y="14" width="36" height="3.4" rx="1.2" fill="currentColor"/><rect x="2" y="22.6" width="36" height="3.4" rx="1.2" fill="currentColor"/></svg>`;
+const ICON={
+ upfront:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2.5" y="5" width="19" height="14" rx="1.5"/><circle cx="12" cy="12" r="2.6"/><path d="M5.5 8.5h1M17.5 15.5h1"/></svg>`,
+ rvb:`<svg viewBox="0 0 24 24"><path d="M12 2C7.6 2 4 5.4 4 9.6c0 2.1.9 4 2.3 5.4V22l5-3.1h.7c4.4 0 8-3.4 8-7.6S16.4 2 12 2z" fill="#ea3934"/></svg>`,
+ map:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>`,
+ plan:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 4h16v16H4zM4 12h7v8M11 4v5"/></svg>`
+};
+const CHIP={upfront:"Estimated upfront costs",rvb:"Compare rent vs buy",map:"View on map",plan:"Floor plan"};
+const SPARK=`<svg viewBox="0 0 24 24" fill="#fff"><path d="M12 2l2.2 6.3L20.5 10l-6.3 2.2L12 18.5l-2.2-6.3L3.5 10l6.3-1.7z"/><path d="M19 15l.9 2.4 2.4.9-2.4.9L19 21.6l-.9-2.4-2.4-.9 2.4-.9z" opacity=".8"/></svg>`;
+
+/* ---------- odometer gauge ---------- */
+const GC={x:120,y:118,r:94};
+const ang=v=>150+240*v/100;
+const pt=(v,r)=>{const a=ang(v)*Math.PI/180;return [GC.x+r*Math.cos(a),GC.y+r*Math.sin(a)]};
+function arc(v0,v1,r){const [x0,y0]=pt(v0,r),[x1,y1]=pt(v1,r);const large=(v1-v0)*2.4>180?1:0;return `M${x0.toFixed(2)} ${y0.toFixed(2)} A${r} ${r} 0 ${large} 1 ${x1.toFixed(2)} ${y1.toFixed(2)}`}
+function gauge(id){
+  const s=state.scores[id]; const from=state.shown[id]??0; const [c,t]=band(s);
+  const col={good:"var(--good)",warn:"var(--warn)",bad:"var(--bad)"}[c];
+  let ticks="";
+  for(const v of [0,50,85,100]){const [x0,y0]=pt(v,GC.r-14);const [x1,y1]=pt(v,GC.r-21);ticks+=`<line x1="${x0.toFixed(1)}" y1="${y0.toFixed(1)}" x2="${x1.toFixed(1)}" y2="${y1.toFixed(1)}" stroke="#bdb8d6" stroke-width="2" stroke-linecap="round"/>`}
+  const labels=[0,50,85,100].map(v=>{const [x,y]=pt(v,GC.r-35);return `<text class="tick-l" x="${x.toFixed(1)}" y="${(y+3.5).toFixed(1)}" text-anchor="middle">${v}</text>`}).join("");
+  return `<div class="gauge" role="img" aria-label="Trust score ${s} out of 100, ${t}">
+  <svg viewBox="0 0 240 200">
+    <defs>
+      <linearGradient id="gR" x1="0" x2="1"><stop offset="0" stop-color="#f0625c"/><stop offset="1" stop-color="#f08a4b"/></linearGradient>
+      <linearGradient id="gA" x1="0" x2="1"><stop offset="0" stop-color="#f5a623"/><stop offset="1" stop-color="#f5c443"/></linearGradient>
+      <linearGradient id="gG" x1="0" x2="1"><stop offset="0" stop-color="#4cc786"/><stop offset="1" stop-color="#1e9e5a"/></linearGradient>
+      <radialGradient id="face" cx=".5" cy=".45" r=".6"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#f1eefc"/></radialGradient>
+      <filter id="sh" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="2" stdDeviation="2.2" flood-color="#2d2475" flood-opacity=".28"/></filter>
+    </defs>
+    <path d="${arc(0,100,GC.r)}" stroke="#e9e6f5" stroke-width="13" fill="none" stroke-linecap="round"/>
+    <path d="${arc(0,50,GC.r)}" stroke="url(#gR)" stroke-width="13" fill="none" stroke-linecap="round"/>
+    <path d="${arc(51.5,83.5,GC.r)}" stroke="url(#gA)" stroke-width="13" fill="none"/>
+    <path d="${arc(85,100,GC.r)}" stroke="url(#gG)" stroke-width="13" fill="none" stroke-linecap="round"/>
+    ${ticks}${labels}
+    <g class="needle" data-to="${ang(s)}" style="transform:rotate(${ang(from)}deg)">
+      <path d="M${GC.x} ${GC.y-3} L${GC.x+GC.r-34} ${GC.y} L${GC.x} ${GC.y+3} Z" fill="${col}" stroke="${col}" stroke-width="1" stroke-linejoin="round"/>
+    </g>
+    <text class="g-num" x="${GC.x}" y="${GC.y+56}" text-anchor="middle" style="fill:${col}">${s}</text>
+    <text class="g-lbl" x="${GC.x}" y="${GC.y+74}" text-anchor="middle">TRUST SCORE</text>
+  </svg></div>`;
+}
+function animateGauge(id){
+  const n=app.querySelector(".needle"); if(!n)return;
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{n.style.transform=`rotate(${n.dataset.to}deg)`}));
+  state.shown[id]=state.scores[id];
+}
+
+function home(){
+  app.innerHTML=`
+  <div class="crumbs"><span class="h">⌂</span>›<b>Princess Tower, Dubai Marina</b></div>
+  <div class="intro" style="margin-top:16px">
+    <b>Prototype: Scout's Suggestions.</b> On a Property Finder listing, Scout replaces the "Property details" block. It gives you the details, shows how far to trust the listing, and drafts messages to the agent that you choose to send.
+    <div class="note" style="margin-top:6px">Three real Princess Tower listings, captured 27 Nov 2026. Agent replies are simulated.</div>
+  </div>
+  <div class="seg" role="group" aria-label="Renting or buying">
+    <button id="m-rent" aria-pressed="${state.mode==="rent"}">I'm renting</button>
+    <button id="m-sale" aria-pressed="${state.mode==="sale"}">I'm buying</button>
+  </div>
+  <div class="cards">${ORDER[state.mode].map(id=>{const l=L[id];const [c,t]=band(state.scores[id]);return `
+    <button class="card" data-go="${id}">
+      ${img(`img/${id}_0.jpg`,l.title)}
+      <div class="body">
+        <div class="cp">${l.priceTxt}${l.per?` <span class="small muted">${l.per}</span>`:""}</div>
+        <div>${esc(l.title)}</div>
+        <div class="small muted">${l.facts.slice(0,3).map(f=>f[1]+(f[0]==="Beds"?" bed":f[0]==="Baths"?" bath":"")).join(" · ")}</div>
+        <span class="pill ${c}">Scout: ${t}</span>
+      </div>
+    </button>`}).join("")}</div>`;
+  app.querySelector("#m-rent").onclick=()=>{state.mode="rent";home()};
+  app.querySelector("#m-sale").onclick=()=>{state.mode="sale";home()};
+  app.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>{location.hash="l"+b.dataset.go});
+}
+
+function listing(id){
+  const l=L[id], x=EXTRA[id], s=state.scores[id]; const [bc,bt]=band(s);
+  const ans=state.answered[id]; const cleared=k=>!!(ans&&ans.cleared&&ans.cleared.includes(k));
+  const short=l.title.length>34?l.title.slice(0,34)+"…":l.title;
+  app.innerHTML=`
+  <div class="crumbs"><button class="backbtn" id="backRes">‹ Back to results</button><span class="h">⌂</span>›<span class="mid">Apartments</span><span class="mid">›</span><span class="mid">Dubai</span><span class="mid">›</span><span>Princess Tower</span>›<b>${esc(short)}</b>
+    <span class="acts2"><span>♡ Save</span><span>↗ Share</span><span>⚑ Report</span></span></div>
+  <div class="gallery">
+    <div class="main">${img(`img/${id}_0.jpg`,"Main photo")}<span class="count">📷 ${l.photos}</span></div>
+    <div class="side">${img(`img/${id}_1.jpg`,"Photo 2")}${img(`img/${id}_2.jpg`,"Photo 3")}</div>
+  </div>
+  <div class="cols">
+    <div class="left">
+      <div class="price">${DH} ${l.priceTxt.replace("AED ","")}${l.per?" "+l.per:""}</div>
+      <div class="chips">${x.chips.map(k=>`<span>${ICON[k]}${CHIP[k]}</span>`).join("")}</div>
+
+      <section class="scout" aria-label="Scout's Suggestions">
+        <div class="scout-h"><div class="av" aria-hidden="true">${SPARK}</div>
+          <div><b>Scout's Suggestions</b><span class="small muted">I read this listing and checked it against the building, so you don't have to.</span></div></div>
+
+        <div class="bubble">
+          <div>Here's the short version. ${esc(l.listed)}.</div>
+          <div class="facts">${l.facts.map(f=>`<div><b>${f[0]}</b>${esc(f[1])}</div>`).join("")}</div>
+        </div>
+
+        <div class="bubble">
+          <div class="trust">
+            <div class="txt">
+              <span class="pill ${bc}">${bt}</span>
+              <div class="verdict">${esc(ans&&ans.verdict||l.verdict)}</div>
+              <ul class="flags">${l.flags.slice(0,3).map(f=>`<li class="${cleared(f.k)?"done":""}">${esc(f.t)}</li>`).join("")}</ul>
+              ${l.good?`<div class="okline">✓ ${esc(l.good)}</div>`:""}
+              ${ans&&ans.quote?`<div class="small"><b>${esc(l.agent.first)} replied:</b> “${esc(ans.quote)}”</div>`:""}
+              <button class="howlink" id="how" aria-expanded="false">How I scored it ›</button>
+            </div>
+            ${gauge(id)}
+          </div>
+          <div id="howBox" hidden>
+            <table class="ded">${l.flags.map(f=>`<tr><td>${esc(f.t)}<div class="note">${esc(f.why)}</div></td><td>${cleared(f.k)?"<span class='muted'>cleared</span>":"−"+f.d}</td></tr>`).join("")}
+            <tr><td><b>Every listing starts at 100</b></td><td>${s}</td></tr></table>
+            <div class="note" style="margin-top:6px">85 to 100 Short list · 51 to 84 Not sure · 50 or below Likely misleading. Verified badges earn no points. I never hide a listing; you decide.</div>
+          </div>
+        </div>
+
+        <div class="bubble">
+          <div>Want me to check with ${esc(l.agent.first)}? I'll draft the message and you tap Send.</div>
+          <div class="acts">${l.asks.map((a,i)=>`<button class="act${i===0?" primary":""}" data-ask="${a.id}">${esc(a.label)}</button>`).join("")}<button class="act" data-ask="chat">Ask Scout anything</button></div>
+        </div>
+      </section>
+
+      <div class="below">
+        <div class="sub">${esc(l.sub)}</div>
+        <h2>${esc(l.title)}</h2>
+        ${x.avail?`<div class="avail">📅 Available from ${x.avail}</div>`:""}
+        <div class="desc">${esc(l.desc)}</div>
+        <p class="note" style="margin-top:18px">Original listing: <a href="https://www.propertyfinder.ae/en/plp/${l.mode==="rent"?"rent":"buy"}/apartment-for-${l.mode==="rent"?"rent":"sale"}-dubai-dubai-marina-princess-tower-${id}.html" target="_blank" rel="noopener">propertyfinder.ae · ${id}</a></p>
+      </div>
+    </div>
+
+    <aside class="side-wrap">
+      <div class="box">
+        <div class="agent">${img(`img/${id}_agent.jpg`,l.agent.name)}
+          <div class="meta"><h3>${esc(l.agent.name)}</h3>
+            ${x.rating?`<div class="stars"><span style="color:#f5b301">★</span>${x.rating} <u>${x.ratings}</u></div>`:""}
+            ${x.superAgent?`<div class="stars" style="color:var(--brand)">SuperAgent</div>`:""}
+            <div class="muted">${esc(x.langs)}</div>
+            ${x.resp?`<div style="font-weight:700">${x.resp}</div>`:""}
+          </div></div>
+        <div class="ctas"><span>📞 Call</span><span class="wa">WhatsApp</span></div>
+      </div>
+      <div class="box broker">${img(`img/${id}_logo.jpg`,l.agent.co)}<b>${esc(l.agent.co)}</b></div>
+      <div class="box mf">
+        <div class="t"><div class="lg"><svg width="22" height="26" viewBox="0 0 26 30" aria-hidden="true"><path d="M13 0C5.8 0 0 5.6 0 12.6c0 3.4 1.4 6.5 3.6 8.8V30l8.1-5.1c.4 0 .9.1 1.3.1 7.2 0 13-5.6 13-12.5S20.2 0 13 0z" fill="#ea3934"/></svg>Mortgage<br>Finder</div><div><b>4.9</b> <span style="color:#f5b301">★</span> (1600+ Google reviews)</div></div>
+        <div class="b"><h4>Thinking about financing this?</h4>
+          <ul><li>The right bank and rate, matched for you</li><li>A dedicated expert guides you to approval</li><li>Completely free, no fees, no obligation</li></ul>
+          <div class="btn">Talk to an expert</div></div>
+      </div>
+    </aside>
+  </div>`;
+  const how=app.querySelector("#how"),hb=app.querySelector("#howBox");
+  how.onclick=()=>{hb.hidden=!hb.hidden;how.setAttribute("aria-expanded",String(!hb.hidden));how.textContent=hb.hidden?"How I scored it ›":"Hide scoring ‹"};
+  app.querySelectorAll("[data-ask]").forEach(b=>b.onclick=()=>openSheet(id,b.dataset.ask));
+  app.querySelector("#backRes").onclick=()=>{location.hash="home"};
+  animateGauge(id);
+}
+
+/* ---------- chat sheet ---------- */
+let sheet=null;
+function openSheet(id,askId){
+  const l=L[id];
+  const root=document.getElementById("sheetRoot");
+  root.innerHTML=`<div class="sheet-bg" id="sbg"></div>
+  <div class="sheet" role="dialog" aria-label="Chat with Scout">
+    <div class="sheet-h"><div class="av" aria-hidden="true">S</div><div><b>Scout</b><div class="small muted">${esc(l.title)}</div></div><button id="sx" aria-label="Close">✕</button></div>
+    <div class="log" id="log"></div>
+    <form class="compose" id="cf"><input id="ci" placeholder="Ask about price, bills, photos, viewing…" autocomplete="off"><button class="send" type="submit">Ask</button></form>
+  </div>`;
+  const close=()=>{root.innerHTML="";route()};
+  root.querySelector("#sx").onclick=close; root.querySelector("#sbg").onclick=close;
+  root.querySelector("#cf").onsubmit=e=>{e.preventDefault();const v=root.querySelector("#ci").value.trim();if(!v)return;root.querySelector("#ci").value="";user(v);answer(id,v)};
+  sheet={id,log:root.querySelector("#log")};
+  if(askId==="chat"){scoutMsg(`Ask me anything about this ${l.mode==="rent"?"rental":"apartment"}. I'll answer from the listing and the registered prices, and if only ${l.agent.first} would know, I'll draft a message for you to send.`)}
+  else runAsk(id,l.asks.find(a=>a.id===askId));
+}
+function add(cls,who,html){const d=document.createElement("div");d.className="msg "+cls;d.innerHTML=(who?`<div class="who">${who}</div>`:"")+html;sheet.log.appendChild(d);sheet.log.scrollTop=sheet.log.scrollHeight;return d}
+const scoutMsg=h=>add("s","Scout",h), user=t=>add("u","You",esc(t));
+function runAsk(id,a){
+  const l=L[id];
+  if(a.local==="tx"){scoutMsg(`<div>${esc(l.tx.label)}, from Dubai Land Department records shown on Property Finder:</div><table class="tx">${l.tx.rows.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join("")}</table><div>This listing asks <b>${l.priceTxt}</b>.</div>`);return}
+  if(a.local==="twin"){scoutMsg(`<div>Left: this listing (1,305 sqft, 2 baths). Right: listing ${l.twin} from the same agency (1,182 sqft, 2BR + study, 3 baths, AED 2.7M). The image files are identical, byte for byte.</div><div class="cmp">${img(`img/${id}_0.jpg`,"This listing")}${img(`img/${l.twin}_0.jpg`,"Other listing")}${img(`img/${id}_1.jpg`,"This listing")}${img(`img/${l.twin}_1.jpg`,"Other listing")}</div><div>At least one of the two isn't showing its own apartment.</div>`);return}
+  if(a.viewing){viewing(id);return}
+  draft(id,a.draft,a);
+}
+function draft(id,text,a){
+  const l=L[id];
+  const d=scoutMsg(`<div>Here's a draft for ${esc(l.agent.first)}. Edit it if you like. Nothing is sent until you tap Send.</div>
+   <div class="draft"><textarea aria-label="Message to agent">${esc(text)}</textarea>
+   <div class="row"><button class="send" type="button">Send to ${esc(l.agent.first)}</button><button class="ghost" type="button">Not now</button></div></div>`);
+  const [sendB,noB]=d.querySelectorAll("button"); const ta=d.querySelector("textarea");
+  noB.onclick=()=>{d.querySelector(".draft").outerHTML=`<div class="note">Not sent.</div>`};
+  sendB.onclick=()=>{
+    const msg=ta.value; d.querySelector(".draft").outerHTML=`<div class="note">Sent via Property Finder chat.</div>`;
+    user(msg);
+    const t=scoutMsg(`<span class="note">Waiting for ${esc(l.agent.first)}…</span>`);
+    setTimeout(()=>{t.remove();
+      if(a&&a.reply){ add("a",`${esc(l.agent.name)} · simulated reply`,esc(a.reply));
+        if(a.outcome==="none") setTimeout(()=>scoutMsg(`Viewing confirmed. I've added it to your calendar view in the app, with the unit, lobby meeting point and ${esc(l.agent.first)}'s number. If the listing changes before then, I'll tell you.`),700);
+        else setTimeout(()=>applyOutcome(id,a),700)}
+      else add("a",`${esc(l.agent.name)} · simulated reply`,"Thanks, I'll check and come back to you shortly.");
+    },1400);
+  };
+}
+function applyOutcome(id,a){
+  const l=L[id];
+  if(!state.answered[id])state.answered[id]={cleared:[]};
+  const ans=state.answered[id];
+  if(a.outcome==="clear"){
+    const keys=a.flag.split("");
+    l.flags.forEach(f=>{if(keys.includes(f.k)&&!ans.cleared.includes(f.k)){ans.cleared.push(f.k);state.scores[id]+=f.d}});
+    ans.verdict=id==="114610923"?"The agent cleared the size and availability questions. This one goes on your short list.":"The floor is settled. The photos still show another unit until real ones arrive.";
+  } else { ans.quote=a.reply; ans.verdict="The agent confirmed it: this is a holiday let, not a yearly Ejari tenancy."}
+  const [c,t]=band(state.scores[id]);
+  scoutMsg(`<div>${esc(a.scout)}</div><span class="pill ${c}">${t} · ${state.scores[id]}/100</span>`);
+}
+function viewing(id){
+  const l=L[id]; const slots=["Sat 29 Nov, 11:00","Sat 29 Nov, 16:00","Mon 1 Dec, 18:30"];
+  const d=scoutMsg(`<div>Pick the times that work for you and I'll ask ${esc(l.agent.first)} to confirm one.</div><div class="slots">${slots.map(s=>`<button type="button" aria-pressed="false">${s}</button>`).join("")}</div><button class="send" type="button" disabled>Draft the request</button>`);
+  const bs=[...d.querySelectorAll(".slots button")], go=d.querySelector(".send");
+  bs.forEach(b=>b.onclick=()=>{b.setAttribute("aria-pressed",b.getAttribute("aria-pressed")==="true"?"false":"true");go.disabled=!bs.some(x=>x.getAttribute("aria-pressed")==="true")});
+  go.onclick=()=>{const pick=bs.filter(x=>x.getAttribute("aria-pressed")==="true").map(x=>x.textContent);go.remove();
+    const extra=l.mode==="sale"?" Please bring the title deed and Form A, and confirm the unit is vacant.":" Please confirm the yearly price, number of cheques and that the contract will be registered with Ejari.";
+    draft(id,`Hi ${l.agent.first}, I'd like to view this unit (${l.title}). I'm free ${pick.join(" or ")}.${extra}`,{reply:`${pick[0]} works. I'll meet you in the Princess Tower lobby. Bring your Emirates ID for building security.`,outcome:"none",scout:""});
+    // override outcome display for viewing
+  };
+}
+function answer(id,q){
+  const l=L[id]; const s=q.toLowerCase();
+  let r=null;
+  if(/(price|worth|expensive|cheap|fair|median|registered|paid)/.test(s)){runAsk(id,{local:"tx"});return}
+  if(/(photo|picture|image)/.test(s)){ if(l.twin){runAsk(id,{local:"twin"});return} r=`I compared this listing's photo files with every other listing in the tower and found no copies. I can't yet tell whether they show this exact unit.`}
+  else if(/(view|visit|see it)/.test(s)){viewing(id);return}
+  else if(/(bill|dewa|chiller|wifi|wi-fi)/.test(s)){r=id==="163244904"?"The listing says DEWA, chiller and Wi-Fi are included, but only if you rent for less than a year. For a 12-month stay that's unclear, so it's worth asking.":"The listing doesn't say. In Dubai, tenants usually pay DEWA and chiller on top of rent."}
+  else if(/(cheque|payment)/.test(s)){r=id==="163244904"?"The listing says 4 cheques.":"The listing doesn't say how many cheques. I can ask."}
+  else if(/(permit|legit|real|scam|fake|trust)/.test(s)){r=`Score ${state.scores[id]}/100. ${l.verdict} Tap "How I scored it" on the page for each check.`}
+  if(r){scoutMsg(esc(r));return}
+  scoutMsg(`Only ${esc(l.agent.first)} would know that.`);
+  draft(id,`Hi ${l.agent.first}, a question about this unit: ${q}`,null);
+}
+
+function route(){
+  const h=location.hash.slice(1);
+  if(h.startsWith("l")&&L[h.slice(1)]){state.mode=L[h.slice(1)].mode;listing(h.slice(1))}else home();
+}
+window.addEventListener("hashchange",()=>{document.getElementById("sheetRoot").innerHTML="";route();window.scrollTo(0,0)});
+route();
+</script>
