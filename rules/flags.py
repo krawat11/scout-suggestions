@@ -1,5 +1,7 @@
 import json,csv,re,statistics,datetime,collections
-A='/mnt/project-files/audit/'
+import os
+HERE=os.path.dirname(os.path.abspath(__file__))
+A=os.path.join(HERE,'..','data')+'/'
 rows={r['id']:r for r in csv.DictReader(open(A+'princess-tower-all-210-listings.csv'))}
 S={str(x['id']):x for x in json.load(open(A+'raw/search-results-210.json'))}
 D=json.load(open(A+'raw/detail-pages-47.json'))
@@ -35,7 +37,7 @@ for i,dd in D.items():
     av=dd.get('avail'); f['W2_stale_avail']=bool(av) and (now-datetime.date.fromisoformat(av[:10])).days>60
     f['W3_cheap']=vs<-15
     out.append(dict(id=i,type=r['type'],beds=r['beds'],broker=r['broker'],price=price,vs=vs,reg=None if reg is None else round(reg),verdict=r['verdict'] or 'Trustworthy',**f))
-json.dump(out,open('flags.json','w'),indent=1)
+json.dump(out,open(os.path.join(HERE,'flags.json'),'w'),indent=1)
 c=collections.defaultdict(collections.Counter)
 for o in out:
     for k,v in o.items():
